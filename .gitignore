@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.idea/
+*.log
+db.sqlite3
+media/
+.DS_Store
+Thumbs.db
