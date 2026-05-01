@@ -68,7 +68,7 @@ class Course(models.Model):
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0.0)]  # fiyat negatif olamaz
+        validators=[MinValueValidator(0)]  #kurs negatif olamaz
     )
     duration = models.IntegerField(
         default=0,
@@ -102,6 +102,7 @@ class Course(models.Model):
 
     class Meta:
         verbose_name_plural = 'Courses'
+        ordering = ['-created_at']  # en yeni kurs önce gelir
 
 
 #######COURSE_SECTION##########
