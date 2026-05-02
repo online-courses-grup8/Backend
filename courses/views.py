@@ -13,3 +13,8 @@ class CourseListView(generics.ListAPIView):
             'instructor',  # instructor join, ekstra sorgu yapmaz
             'category'     # category join, ekstra sorgu yapmaz
         )
+
+
+from rest_framework.decorators import api_view
+
+
