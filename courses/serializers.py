@@ -17,6 +17,7 @@ class InstructorSerializer(serializers.ModelSerializer):
 class CourseListSerializer(serializers.ModelSerializer):
     student_count = serializers.SerializerMethodField()
     lesson_count = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()
     instructor = InstructorSerializer(read_only=True)
     category = CategorySerializer(read_only=True)
 
@@ -34,3 +35,8 @@ class CourseListSerializer(serializers.ModelSerializer):
 
     def get_lesson_count(self, obj):
         return CourseLesson.objects.filter(section__course=obj).count()
+
+    def get_thumbnail(self, obj):
+        if obj.thumbnail:
+            return obj.thumbnail.name
+        return None

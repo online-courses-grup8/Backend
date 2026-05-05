@@ -79,7 +79,6 @@ class CourseListAPITest(TestCase):
             duration=30,
             order=1
         )
-
         # kullanıcıyı kursa kaydet
         self.enrollment = Enrollment.objects.create(
             user=self.user,
