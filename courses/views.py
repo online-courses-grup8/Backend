@@ -15,6 +15,6 @@ class CourseListView(generics.ListAPIView):
         )
 
 
-from rest_framework.decorators import api_view
+
 
 
