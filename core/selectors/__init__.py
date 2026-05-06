@@ -1,0 +1,1 @@
+from .faq import get_active_faqs

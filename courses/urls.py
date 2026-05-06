@@ -6,6 +6,8 @@ from .views import (
     CourseInstructorView,
     CourseReviewsView,
     CourseCommentCreateView,
+    InstructorListView,
+    InstructorDetailView,
 )
 
 urlpatterns = [
@@ -20,4 +22,8 @@ urlpatterns = [
 
 # POST /api/v1/courses/<slug>/comments/
     path("courses/<slug:slug>/comments/", CourseCommentCreateView.as_view(), name="course-comment-create"),
+
+# instructor endpoint'leri
+    path('instructors/', InstructorListView.as_view(), name='instructor-list'),
+    path('instructors/<slug:slug>/', InstructorDetailView.as_view(), name='instructor-detail'),
 ]
