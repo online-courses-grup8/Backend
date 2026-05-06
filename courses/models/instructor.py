@@ -34,6 +34,7 @@ class Instructor(models.Model):
 
     class Meta:
         verbose_name_plural = 'Instructors'
+        ordering = ['name']  # isme göre sıralı gelir
 
 class InstructorSkill(models.Model):
     instructor = models.ForeignKey(
