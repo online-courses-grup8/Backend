@@ -1,10 +1,7 @@
 #QUERY LOGİC bu kısımda olur
-from django.db.models import Count
-from courses.models import Course
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
 from courses.models import Course, CourseSection, CourseLesson
-from courses.models import Course
 from django.db.models import Count, Avg, Q
 
 # - sadece yayınlanan kursları getirir
