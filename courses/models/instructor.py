@@ -13,6 +13,11 @@ class Instructor(models.Model):
         null=True,
         blank=True
     )
+    thumbnail = models.ImageField(
+        upload_to='assets/img/',
+        null=True,
+        blank=True
+    )  # instructor arka plan görseli
     slug = models.SlugField(unique=True, null=True, blank=True)  # URL için tekil isim
     specialization = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
@@ -22,6 +27,7 @@ class Instructor(models.Model):
     instagram = models.URLField(null=True, blank=True)
     linkedin = models.URLField(null=True, blank=True)
     twitter = models.URLField(null=True, blank=True)
+
 
     def save(self, *args, **kwargs):
         # slug otomatik oluşturulur, örn: "Jane Cooper" → "jane-cooper"
