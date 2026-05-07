@@ -7,7 +7,6 @@ class InstructorListView(generics.ListAPIView):
     # tüm eğitmenleri listeler
     permission_classes = [AllowAny]
     serializer_class = InstructorListSerializer
-
     def get_queryset(self):
         return get_all_instructors()
 
