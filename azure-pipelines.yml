@@ -16,11 +16,10 @@ steps:
       repository: 'backend-app'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
+      arguments: '--build-arg SECRET_KEY=$(SECRET_KEY)'
       tags: |
         latest
-      arguments: '--secret id=SECRET_KEY,env=SECRET_KEY'
-    env:
-      SECRET_KEY: $(SECRET_KEY)
+      
 
 
   - task: SSH@0
