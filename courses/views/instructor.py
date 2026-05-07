@@ -1,8 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from courses.serializers.instructor import InstructorListSerializer, TeacherDetailSerializer
-from courses.selectors.instructor import get_all_instructors, get_instructor_by_slug
-
+from courses.selectors.instructor import get_all_instructors, get_instructor_by_slug, get_other_instructors
 
 class InstructorListView(generics.ListAPIView):
     # tüm eğitmenleri listeler
@@ -20,3 +19,12 @@ class InstructorDetailView(generics.RetrieveAPIView):
 
     def get_object(self):
         return get_instructor_by_slug(self.kwargs['slug'])
+
+
+class InstructorOthersView(generics.ListAPIView):
+    # mevcut instructor hariç diğer eğitmenleri listeler
+    permission_classes = [AllowAny]
+    serializer_class = InstructorListSerializer
+
+    def get_queryset(self):
+        return get_other_instructors(self.kwargs['slug'])
