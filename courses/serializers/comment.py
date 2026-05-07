@@ -3,10 +3,18 @@ from courses.models import Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    photo = serializers.SerializerMethodField()  # kullanıcı fotoğrafı
+
     class Meta:
         model = Comment
-        fields = ["id", "name", "message", "rating", "created_at"]
+        fields = ["id", "name", "photo", "message", "rating", "created_at"]
 
+    def get_photo(self, obj):
+        # login kullanıcının profil fotoğrafını döndürür
+        # guest ise default anonim fotoğraf döner
+        if obj.user and obj.user.profile_image:
+            return obj.user.profile_image.name.split("/")[-1]
+        return "anonymous.jpg"
 
 
 class CommentCreateSerializer(serializers.Serializer):
@@ -18,7 +26,6 @@ class CommentCreateSerializer(serializers.Serializer):
     def validate(self, attrs):
         request = self.context.get("request")
 
-        # Login olmayan kullanıcı için name ve email zorunlu
         if not request or not request.user.is_authenticated:
             if not attrs.get("name"):
                 raise serializers.ValidationError({"name": "Name is required for guest users."})

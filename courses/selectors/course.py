@@ -1,8 +1,8 @@
 #QUERY LOGİC bu kısımda olur
 from django.shortcuts import get_object_or_404
 from django.db.models import Prefetch
-from courses.models import Course, CourseSection, CourseLesson
 from django.db.models import Count, Avg, Q
+from courses.models import Course, CourseSection, CourseLesson, Comment
 
 # - sadece yayınlanan kursları getirir
 # - öğrenci ve ders sayısını annotate eder
@@ -61,7 +61,12 @@ def get_course_instructor(slug):
 def get_course_reviews(slug):
     course = get_object_or_404(
         Course.objects.filter(is_published=True)
-        .prefetch_related("comments"),
+        .prefetch_related(
+            Prefetch(
+                "comments",
+                queryset=Comment.objects.select_related("user")  # user'ı da çek, photo için lazım
+            )
+        ),
         slug=slug
     )
 

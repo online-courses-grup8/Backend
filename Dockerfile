@@ -15,7 +15,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+RUN --mount=type=secret,id=SECRET_KEY \
+    SECRET_KEY=$(cat /run/secrets/SECRET_KEY) python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
