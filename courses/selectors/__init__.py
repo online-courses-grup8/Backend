@@ -1,3 +1,3 @@
 from .course import get_published_courses
 from .comment import get_course_for_comment
-from .instructor import get_all_instructors, get_instructor_by_slug
+from .instructor import get_all_instructors, get_instructor_by_slug,get_other_instructors

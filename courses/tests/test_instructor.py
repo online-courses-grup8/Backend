@@ -143,3 +143,58 @@ class InstructorDetailAPITest(TestCase):
         url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class InstructorOthersAPITest(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+        # iki instructor oluştur
+        self.instructor1 = Instructor.objects.create(
+            name='Jane Cooper',
+            bio_hardskill='Python, Django',
+            bio_softskill='Leadership',
+            specialization='Backend Development',
+            experience=5,
+            position='Senior Developer',
+        )
+
+        self.instructor2 = Instructor.objects.create(
+            name='John Doe',
+            bio_hardskill='React, Next.js',
+            bio_softskill='Teamwork',
+            specialization='Frontend Development',
+            experience=3,
+            position='Frontend Developer',
+        )
+
+    def test_others_returns_200(self):
+        # API 200 dönüyor mu?
+        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_others_excludes_current_instructor(self):
+        # mevcut instructor hariç tutuluyor mu?
+        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'][0]['name'], 'John Doe')
+
+    def test_others_unauthenticated(self):
+        # login olmadan erişilebiliyor mu?
+        self.client.force_authenticate(user=None)
+        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_others_required_fields(self):
+        # gerekli alanlar var mı?
+        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
+        response = self.client.get(url)
+        instructor = response.data['results'][0]
+        self.assertIn('id', instructor)
+        self.assertIn('name', instructor)
+        self.assertIn('slug', instructor)
+        self.assertIn('position', instructor)

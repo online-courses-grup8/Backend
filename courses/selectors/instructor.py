@@ -13,3 +13,6 @@ def get_instructor_by_slug(slug):
         Instructor.objects.prefetch_related('skills'),
         slug=slug
     )
+def get_other_instructors(slug):
+    # mevcut instructor hariç diğerlerini getirir
+    return Instructor.objects.exclude(slug=slug)

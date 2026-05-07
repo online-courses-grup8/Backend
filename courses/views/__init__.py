@@ -6,4 +6,4 @@ from .course import (
     CourseReviewsView,
 )
 from .comment import CourseCommentCreateView
-from .instructor import InstructorListView, InstructorDetailView
+from .instructor import InstructorListView, InstructorDetailView,InstructorOthersView
