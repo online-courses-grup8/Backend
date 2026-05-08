@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from decouple import config #env dosyasındaki değerleri okumak için
-from datetime import timedelta #jwt token süreleri 60 dk 7 gün gibi değerleri okumak için var
+#from datetime import timedelta #jwt token süreleri 60 dk 7 gün gibi değerleri okumak için var
 import sys
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third party
     'rest_framework',
-    'rest_framework_simplejwt',
+    #'rest_framework_simplejwt',
     'corsheaders', # bu next.jsden gele istekleri kabul etmek için
     'django_filters', #kurs filtreleme için kullanıcam bi bakıcam buna
     # Local apps
@@ -127,9 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # DRF
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+   # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    #],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
@@ -142,11 +142,11 @@ REST_FRAMEWORK = {
 }
 
 # JWT
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('JWT_ACCESS_TOKEN_LIFETIME', cast=int)),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('JWT_REFRESH_TOKEN_LIFETIME', cast=int)),
-    'ROTATE_REFRESH_TOKENS': True,
-}
+#SIMPLE_JWT = {
+#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('JWT_ACCESS_TOKEN_LIFETIME', cast=int)),
+#    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('JWT_REFRESH_TOKEN_LIFETIME', cast=int)),
+#    'ROTATE_REFRESH_TOKENS': True,
+#}
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True

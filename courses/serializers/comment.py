@@ -14,7 +14,7 @@ class CommentSerializer(serializers.ModelSerializer):
         # guest ise default anonim fotoğraf döner
         if obj.user and obj.user.profile_image:
             return obj.user.profile_image.name.split("/")[-1]
-        return "anonymous.jpg"
+        return "anonymous.jpeg"
 
 
 class CommentCreateSerializer(serializers.Serializer):

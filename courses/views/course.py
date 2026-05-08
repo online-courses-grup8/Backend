@@ -3,7 +3,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-
 from utils.pagination import CustomPageNumberPagination
 from courses.serializers import (
     CourseListSerializer,
@@ -27,7 +26,6 @@ class CourseListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = CourseListSerializer
     pagination_class = CustomPageNumberPagination
-
     def get_queryset(self):
         return get_published_courses()
 
