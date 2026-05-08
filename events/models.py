@@ -5,6 +5,8 @@ class Event(models.Model):
     title = models.CharField(max_length=200)  # etkinlik adı
     slug = models.SlugField(unique=True)  # URL için tekil isim
     description = models.TextField()  # etkinlik açıklaması
+    requirements = models.TextField(null=True, blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
     date = models.DateTimeField()  # etkinlik tarihi
     start_time = models.TimeField()  # başlangıç saati
     end_time = models.TimeField()  # bitiş saati
@@ -14,10 +16,6 @@ class Event(models.Model):
     phone = models.CharField(max_length=20, null=True, blank=True)  # iletişim telefonu, opsiyonel
     email = models.EmailField(null=True, blank=True)  # iletişim emaili, opsiyonel
     image = models.ImageField(upload_to='events/', null=True, blank=True)  # etkinlik görseli, opsiyonel
-    facebook = models.URLField(null=True, blank=True)  # facebook linki
-    instagram = models.URLField(null=True, blank=True)  # instagram linki
-    linkedin = models.URLField(null=True, blank=True)  # linkedin linki
-    twitter = models.URLField(null=True, blank=True)  # twitter linki
 
     def __str__(self):
         return self.title
