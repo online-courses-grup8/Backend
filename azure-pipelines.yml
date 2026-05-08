@@ -28,6 +28,7 @@ steps:
       sshEndpoint: 'onlinecourse-vm-conn'
       runOptions: 'commands'
       commands: |
+        docker network create app-network 2>/dev/null || true
         docker login $(ACR_LOGIN_SERVER) -u $(ACR_NAME) -p $(ACR_PASSWORD) 2>/dev/null
         docker pull $(ACR_LOGIN_SERVER)/backend-app:latest
         docker stop backend-app 2>/dev/null || true
