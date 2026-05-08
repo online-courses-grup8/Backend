@@ -2,11 +2,14 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from courses.serializers.instructor import InstructorListSerializer, TeacherDetailSerializer
 from courses.selectors.instructor import get_all_instructors, get_instructor_by_slug, get_other_instructors
+from utils.pagination import CustomPageNumberPagination
+
 
 class InstructorListView(generics.ListAPIView):
     # tüm eğitmenleri listeler
     permission_classes = [AllowAny]
     serializer_class = InstructorListSerializer
+    pagination_class = CustomPageNumberPagination
 
     def get_queryset(self):
         return get_all_instructors()

@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
 
 from utils.pagination import CustomPageNumberPagination
 from courses.serializers import (
@@ -26,7 +26,6 @@ class CourseListView(generics.ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = CourseListSerializer
     pagination_class = CustomPageNumberPagination
-
     def get_queryset(self):
         return get_published_courses()
 
@@ -42,19 +41,14 @@ class CourseOverviewView(generics.RetrieveAPIView):
 
 
 # Course curriculum endpoint
-# Sections ve lessons bilgilerini döner (tab değişince çağrılır)
-class CourseCurriculumView(generics.GenericAPIView):
+# Sections ve lessons bilgilerini döner
+class CourseCurriculumView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = CourseSectionSerializer
 
-    def get(self, request, *args, **kwargs):
-        course = get_course_curriculum(self.kwargs["slug"])
-
-        # Course içindeki tüm section ve lessonları serialize eder
-        serializer = self.get_serializer(course.sections.all(), many=True)
-
+    def get(self, request, slug):
+        course = get_course_curriculum(slug)
+        serializer = CourseSectionSerializer(course.sections.all(), many=True)
         return Response(serializer.data)
-
 
 # Course instructor endpoint
 # Instructor detay bilgilerini döner
@@ -67,17 +61,15 @@ class CourseInstructorView(generics.RetrieveAPIView):
         return course.instructor
 
 
+
 # Course reviews endpoint
-# Kursa ait yorumları döner
-class CourseReviewsView(generics.GenericAPIView):
+# Kursa ait yorumları ve rating özetini döner
+class CourseReviewsView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = CommentSerializer
 
-    def get(self, request, *args, **kwargs):
-        course, summary = get_course_reviews(self.kwargs["slug"])
-
-        reviews = self.get_serializer(course.comments.all(), many=True)
-
+    def get(self, request, slug):
+        course, summary = get_course_reviews(slug)
+        reviews = CommentSerializer(course.comments.all(), many=True)
         return Response({
             "average_rating": round(summary["average_rating"] or 0, 1),
             "total_reviews": summary["total_reviews"],

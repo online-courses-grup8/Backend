@@ -16,11 +16,12 @@ class InstructorSerializer(serializers.ModelSerializer):
 
 class InstructorDetailSerializer(serializers.ModelSerializer):
     photo = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()  # arka plan görseli
 
     class Meta:
         model = Instructor
         fields = [
-            "id", "name", "photo", "specialization",
+            "id", "name", "photo","thumbnail", "specialization",
             "experience", "position",
             "bio_hardskill", "bio_softskill",
             "facebook", "instagram", "linkedin", "twitter"
@@ -29,6 +30,12 @@ class InstructorDetailSerializer(serializers.ModelSerializer):
     def get_photo(self, obj):
         if obj.photo:
             return obj.photo.name.split("/")[-1]
+        return None
+
+    def get_thumbnail(self, obj):
+        # sadece dosya adını döndürür
+        if obj.thumbnail:
+            return obj.thumbnail.name.split("/")[-1]
         return None
 
 class InstructorListSerializer(serializers.ModelSerializer):
@@ -57,12 +64,13 @@ class InstructorSkillSerializer(serializers.ModelSerializer):
 class TeacherDetailSerializer(serializers.ModelSerializer):
     # teacher detay sayfası için, skill bar'lar dahil
     photo = serializers.SerializerMethodField()
-    skills = InstructorSkillSerializer(many=True, read_only=True)  # skill bar'ları döndürür
+    thumbnail = serializers.SerializerMethodField()  # arka plan görseli
+    skills = InstructorSkillSerializer(many=True, read_only=True)
 
     class Meta:
         model = Instructor
         fields = [
-            "id", "name", "slug", "photo", "specialization",
+            "id", "name", "slug", "photo", "thumbnail", "specialization",
             "experience", "position", "phone_number",
             "bio_hardskill", "bio_softskill",
             "facebook", "instagram", "linkedin", "twitter",
@@ -70,7 +78,12 @@ class TeacherDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_photo(self, obj):
-        # sadece dosya adını döndürür
         if obj.photo:
             return obj.photo.name.split("/")[-1]
+        return None
+
+    def get_thumbnail(self, obj):
+        # sadece dosya adını döndürür
+        if obj.thumbnail:
+            return obj.thumbnail.name.split("/")[-1]
         return None
