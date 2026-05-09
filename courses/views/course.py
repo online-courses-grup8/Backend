@@ -47,8 +47,11 @@ class CourseCurriculumView(APIView):
 
     def get(self, request, slug):
         course = get_course_curriculum(slug)
-        serializer = CourseSectionSerializer(course.sections.all(), many=True)
-        return Response(serializer.data)
+        sections = CourseSectionSerializer(course.sections.all(), many=True)
+        return Response({
+            "description": course.curriculum_description,
+            "sections": sections.data
+        })
 
 # Course instructor endpoint
 # Instructor detay bilgilerini döner

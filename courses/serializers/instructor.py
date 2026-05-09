@@ -40,18 +40,19 @@ class InstructorDetailSerializer(serializers.ModelSerializer):
 
 class InstructorListSerializer(serializers.ModelSerializer):
     # teacher listesi sayfası için
-    photo = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()  # arka plan görseli
 
     class Meta:
         model = Instructor
         fields = [
-            'id', 'name', 'slug', 'photo', 'position',
+            'id', 'name', 'slug', 'thumbnail', 'position',
             'facebook', 'instagram', 'linkedin', 'twitter'
         ]
 
-    def get_photo(self, obj):
-        if obj.photo:
-            return obj.photo.name.split("/")[-1]
+    def get_thumbnail(self, obj):
+        # sadece dosya adını döndürür
+        if obj.thumbnail:
+            return obj.thumbnail.name.split("/")[-1]
         return None
 
 class InstructorSkillSerializer(serializers.ModelSerializer):
