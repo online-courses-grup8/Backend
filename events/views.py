@@ -16,7 +16,7 @@ class EventListView(generics.ListAPIView):
         return get_all_events()
 
 
-class EventDetailView(generics.RetrieveAPIView):  # ← dışarıda olmalı
+class EventDetailView(generics.RetrieveAPIView):
     # slug'a göre etkinlik detayını döner
     permission_classes = [AllowAny]
     serializer_class = EventDetailSerializer
