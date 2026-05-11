@@ -9,6 +9,7 @@ class Event(models.Model):
     slug = models.SlugField(unique=True)  # URL için tekil isim
     description = models.TextField()  # etkinlik açıklaması
     requirements = models.TextField(null=True, blank=True)
+    requirements_list = models.JSONField(default=list, blank=True)  # tikli madde madde liste
     date = models.DateTimeField()  # etkinlik tarihi
     start_time = models.TimeField()  # başlangıç saati
     end_time = models.TimeField()  # bitiş saati
