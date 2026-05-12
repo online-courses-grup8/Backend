@@ -1,51 +1,10 @@
+# payments/models/payment.py
 from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator
+import uuid
 
 
-####CARD(SEPET)#####
-class Cart(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='cart'  # user.cart ile erişilebilir
-    )
-    updated_at = models.DateTimeField(auto_now=True)  # her güncellemede otomatik değişir
-
-    def __str__(self):
-        return f"{self.user} - Cart"
-
-    class Meta:
-        verbose_name_plural = 'Carts'
-
-#####CARDITEM#####
-class CartItem(models.Model):
-    cart = models.ForeignKey(
-        Cart,
-        on_delete=models.CASCADE,
-        related_name='items'  # cart.items.all() ile erişilebilir
-    )
-    course = models.ForeignKey(
-        'courses.Course',  # string referans, modülerlik korunur
-        on_delete=models.CASCADE,
-        related_name='cart_items'
-    )
-    price = models.DecimalField(
-        max_digits=8,
-        decimal_places=2,
-        validators=[MinValueValidator(0.0)]  # fiyat negatif olamaz
-    )  # sepete eklendiği andaki fiyat
-    added_at = models.DateTimeField(auto_now_add=True)  # sepete eklenme tarihi
-
-    def __str__(self):
-        return f"{self.cart} - {self.course}"
-
-    class Meta:
-        verbose_name_plural = 'Cart Items'
-        unique_together = ['cart', 'course']  # aynı kurs sepete iki kez eklenemez
-
-
-####PAYMENT#####
 class Payment(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),      # beklemede
@@ -69,18 +28,23 @@ class Payment(models.Model):
         max_length=20,
         choices=STATUS_CHOICES,
         default='pending'  # başlangıçta beklemede
-    )  # ödeme durumu
+    )
+    card_last_four = models.CharField(max_length=4)  # son 4 hane
     transaction_id = models.CharField(max_length=200, unique=True)  # tekil işlem id
+
+    def save(self, *args, **kwargs):
+        # transaction id otomatik üret
+        if not self.transaction_id:
+            self.transaction_id = f"TXN-{uuid.uuid4().hex[:12].upper()}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user} - {self.amount} - {self.status}"
 
     class Meta:
         verbose_name_plural = 'Payments'
-        ordering = ['-payment_date']  # en yeni ödeme önce gelir
+        ordering = ['-payment_date']
 
-
-    ########PAYMENTITEM#########
 
 class PaymentItem(models.Model):
     payment = models.ForeignKey(
@@ -89,14 +53,14 @@ class PaymentItem(models.Model):
         related_name='items'  # payment.items.all() ile erişilebilir
     )
     course = models.ForeignKey(
-        'courses.Course',  # string referans, modülerlik korunur
+        'courses.Course',
         on_delete=models.CASCADE,
         related_name='payment_items'
     )
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0.0)]  # satın alma anındaki fiyat, negatif olamaz
+        validators=[MinValueValidator(0.0)]  # satın alma anındaki fiyat
     )
 
     def __str__(self):
