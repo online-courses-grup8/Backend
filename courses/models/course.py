@@ -13,6 +13,7 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)  # URL için tekil isim, otomatik validasyon var
     description = models.TextField()
+    curriculum_description = models.TextField(null=True, blank=True)  # curriculum sayfası için kısa açıklama
     requirements = models.TextField(null=True, blank=True)  # kurs gereksinimleri
     thumbnail = models.ImageField(
         upload_to='assets/img/'

@@ -26,14 +26,16 @@ class BlogPost(models.Model):
     content = models.TextField(
         validators=[MinLengthValidator(50)]  # içerik en az 50 karakter
     )
-    thumbnail = models.ImageField(upload_to='blog/', null=True, blank=True)  # blog görseli, opsiyonel
-    category = models.CharField(max_length=100)  # blog kategorisi
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
+    photo=models.ImageField(
+        upload_to='asset/img',
+        blank=True,
         null=True,
-        related_name='blog_posts'  # user.blog_posts.all() ile erişilebilir
     )
+    thumbnail = models.ImageField(upload_to='asset/img', null=True, blank=True)  # blog görseli, opsiyonel
+    category = models.CharField(max_length=100)  # blog kategorisi
+    author_name = models.CharField(max_length=100, null=True, blank=True)
+    author_photo = models.ImageField(upload_to='blog/authors/', null=True, blank=True)
+    author_position = models.CharField(max_length=100, null=True, blank=True)
     tags = models.ManyToManyField(
         Tag,
         blank=True,
