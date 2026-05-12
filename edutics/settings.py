@@ -126,9 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # DRF
 REST_FRAMEWORK = {
-   # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #    'rest_framework_simplejwt.authentication.JWTAuthentication',
-    #],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'users.authentication.JWTAuthentication',  # ← bunu yaz
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
@@ -141,11 +141,8 @@ REST_FRAMEWORK = {
 }
 
 # JWT
-#SIMPLE_JWT = {
-#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=config('JWT_ACCESS_TOKEN_LIFETIME', cast=int)),
-#    'REFRESH_TOKEN_LIFETIME': timedelta(days=config('JWT_REFRESH_TOKEN_LIFETIME', cast=int)),
-#    'ROTATE_REFRESH_TOKENS': True,
-#}
+JWT_ACCESS_TOKEN_LIFETIME = config('JWT_ACCESS_TOKEN_LIFETIME', cast=int, default=60)  # dakika
+JWT_REFRESH_TOKEN_LIFETIME = config('JWT_REFRESH_TOKEN_LIFETIME', cast=int, default=7)  # gün
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
