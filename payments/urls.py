@@ -1,6 +1,7 @@
 # payments/urls.py
 from django.urls import path
 from payments.views.cart import CartView, CartAddView, CartRemoveView, CartSyncView
+from payments.views.payment import CheckoutView
 
 urlpatterns = [
     # GET /api/v1/cart/ → sepeti getir
@@ -11,4 +12,6 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', CartRemoveView.as_view(), name='cart-remove'),
     # POST /api/v1/cart/sync/ → local storage'dan senkronize et
     path('cart/sync/', CartSyncView.as_view(), name='cart-sync'),
+    # POST /api/v1/checkout/ → ödeme yap
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
 ]
