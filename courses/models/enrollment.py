@@ -21,14 +21,7 @@ class Enrollment(models.Model):
     def __str__(self):
         return f"{self.user} - {self.course.title}"
 
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None  # yeni kayıt mı
-        super().save(*args, **kwargs)
-        if is_new:
-            # yeni enrollment oluşunca student_count artır
-            Course.objects.filter(pk=self.course.pk).update(
-                student_count=models.F('student_count') + 1
-            )
+   
     class Meta:
         verbose_name_plural = 'Enrollments'
         unique_together = ['user', 'course']  # aynı kullanıcı aynı kursa iki kez kayıt olamaz
