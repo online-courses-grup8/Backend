@@ -4,7 +4,12 @@ from django.db import models
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    profile_image = models.ImageField(upload_to='users/', null=True, blank=True)
+    profile_image = models.ImageField(
+        upload_to='asset/img',
+        null=True,
+        blank=True,
+        default='anonymous.jpeg'
+    )
     phone_number = models.CharField(max_length=20, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)  
 
