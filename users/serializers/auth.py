@@ -18,12 +18,24 @@ class RegisterSerializer(serializers.ModelSerializer):
         # boş olamaz
         if not value.strip():
             raise serializers.ValidationError("First name is required.")
+        # en az 2 karakter olmalı
+        if len(value.strip()) < 2:
+            raise serializers.ValidationError("First name must be at least 2 characters.")
+        # sadece harf içermeli
+        if not value.strip().isalpha():
+            raise serializers.ValidationError("First name must contain only letters.")
         return value.strip()
 
     def validate_last_name(self, value):
         # boş olamaz
         if not value.strip():
             raise serializers.ValidationError("Last name is required.")
+        # en az 2 karakter olmalı
+        if len(value.strip()) < 2:
+            raise serializers.ValidationError("Last name must be at least 2 characters.")
+        # sadece harf içermeli
+        if not value.strip().isalpha():
+            raise serializers.ValidationError("Last name must contain only letters.")
         return value.strip()
 
     def validate_email(self, value):
@@ -34,6 +46,15 @@ class RegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Bu email zaten kayıtlı.")
         return value.lower()  # emaili küçük harfe çevir
 
+    def validate_password(self, value):
+        # en az bir büyük harf olmalı
+        if not any(c.isupper() for c in value):
+            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+        # en az bir rakam olmalı
+        if not any(c.isdigit() for c in value):
+            raise serializers.ValidationError("Password must contain at least one number.")
+        return value
+    
     def validate(self, attrs):
         # şifreler eşleşiyor mu kontrol et
         if attrs['password'] != attrs['confirm_password']:
