@@ -37,4 +37,4 @@ steps:
         sleep 5
         docker exec backend-app python manage.py migrate --noinput
         docker ps | grep backend-app
-        docker logs backend-app --tail 20 
+        docker logs backend-app --tail 20 2>&1 || true
