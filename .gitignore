@@ -144,3 +144,11 @@ media/
 
 .DS_Store
 Thumbs.db
+
+# Media files
+asset/
+media/
+*.jpg
+*.jpeg
+*.png
+*.gif
