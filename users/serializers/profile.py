@@ -65,3 +65,26 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Enter a valid phone number.")
             return value
 
+class ChangePasswordSerializer(serializers.Serializer):
+    # şifre değiştirme için gerekli alanlar
+    current_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, min_length=8)
+    confirm_new_password = serializers.CharField(write_only=True)
+
+    def validate_new_password(self, value):
+        # en az bir büyük harf olmalı
+        if not any(c.isupper() for c in value):
+            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+        # en az bir rakam olmalı
+        if not any(c.isdigit() for c in value):
+            raise serializers.ValidationError("Password must contain at least one number.")
+        # en az bir özel karakter olmalı
+        if not any(c in '!@#$%^&*()_+-=' for c in value):
+            raise serializers.ValidationError("Password must contain at least one special character.")
+        return value
+
+    def validate(self, attrs):
+        # yeni şifreler eşleşiyor mu
+        if attrs['new_password'] != attrs['confirm_new_password']:
+            raise serializers.ValidationError({"confirm_new_password": "Passwords do not match."})
+        return attrs
