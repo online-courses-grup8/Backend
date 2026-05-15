@@ -2,6 +2,8 @@
 from django.urls import path
 from users.views.auth import RegisterView, LoginView
 from users.views.profile import ProfileView, ProfileUpdateView, ChangePasswordView, DeleteAccountView
+from users.views.my_events import MyEventListView
+
 urlpatterns = [
     # POST /api/v1/auth/register/
     path('auth/register/', RegisterView.as_view(), name='auth-register'),
@@ -12,5 +14,6 @@ urlpatterns = [
     path('profile/update/', ProfileUpdateView.as_view(), name='profile-update'),
     path('profile/change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('profile/delete/', DeleteAccountView.as_view(), name='delete-account'),
+    path('profile/my-events/', MyEventListView.as_view(), name='my-events'),
 
 ]
