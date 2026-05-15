@@ -5,9 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from users.selectors.profile import get_user_profile
-from users.serializers.profile import ProfileSerializer, ProfileUpdateSerializer, ChangePasswordSerializer
-from users.services.profile import update_user_profile, change_user_password
-
+from users.serializers.profile import ProfileSerializer, ProfileUpdateSerializer, ChangePasswordSerializer, DeleteAccountSerializer
+from users.services.profile import update_user_profile, change_user_password, delete_user_account
 
 class ProfileView(APIView):
     # GET /api/v1/profile/ → profil bilgilerini döner
@@ -93,5 +92,31 @@ class ChangePasswordView(APIView):
         return Response({
             "status": 200,
             "payload": {"message": "Password updated successfully."},
+            "errorMessage": None
+        })
+
+class DeleteAccountView(APIView):
+    # DELETE /api/v1/profile/delete/ → hesabı siler
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        serializer = DeleteAccountSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        success, error = delete_user_account(
+            user=request.user,
+            password=serializer.validated_data['password'],
+        )
+
+        if not success:
+            return Response({
+                "status": 400,
+                "payload": None,
+                "errorMessage": {"detail": error}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "status": 200,
+            "payload": {"message": "Account deleted successfully."},
             "errorMessage": None
         })

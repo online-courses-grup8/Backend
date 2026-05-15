@@ -19,3 +19,12 @@ def change_user_password(user, current_password, new_password):
     user.set_password(new_password)
     user.save()
     return True, None
+
+
+# users/services/profile.py'e ekle
+def delete_user_account(user, password):
+    # şifreyi doğrular, sonra hesabı siler
+    if not user.check_password(password):
+        return False, "Password is incorrect."
+    user.delete()
+    return True, None

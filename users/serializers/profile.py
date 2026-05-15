@@ -88,3 +88,8 @@ class ChangePasswordSerializer(serializers.Serializer):
         if attrs['new_password'] != attrs['confirm_new_password']:
             raise serializers.ValidationError({"confirm_new_password": "Passwords do not match."})
         return attrs
+
+
+class DeleteAccountSerializer(serializers.Serializer):
+    # hesap silme için şifre doğrulama
+    password = serializers.CharField(write_only=True)

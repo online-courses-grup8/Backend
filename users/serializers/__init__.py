@@ -2,3 +2,5 @@
 from .auth import RegisterSerializer, LoginSerializer
 from .profile import ProfileSerializer, ProfileUpdateSerializer
 from .profile import ProfileSerializer, ProfileUpdateSerializer, ChangePasswordSerializer
+from .auth import RegisterSerializer, LoginSerializer
+from .profile import ProfileSerializer, ProfileUpdateSerializer, ChangePasswordSerializer, DeleteAccountSerializer
