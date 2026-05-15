@@ -16,7 +16,11 @@ steps:
       repository: 'backend-app'
       command: 'buildAndPush'
       Dockerfile: '**/Dockerfile'
-      arguments: '--build-arg SECRET_KEY=$(SECRET_KEY)'
+      arguments: >
+        --build-arg SECRET_KEY="$(SECRET_KEY)"
+        --build-arg AZURE_ACCOUNT_NAME="$(AZURE_ACCOUNT_NAME)"
+        --build-arg AZURE_ACCOUNT_KEY="$(AZURE_ACCOUNT_KEY)"
+        --build-arg AZURE_CONTAINER="$(AZURE_CONTAINER)"
       tags: |
         latest
       
