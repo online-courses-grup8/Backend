@@ -18,7 +18,7 @@ def get_recommended_courses(user, limit=4):
         is_published=True,
         category__in=category_ids,
     ).exclude(
-        id__in=enrolled_course_ids
+        id__in=enrolled_course_ids  # zaten sahip olduğu kursları çıkar
     ).annotate(
         student_count=Count('enrollments', distinct=True),
         lesson_count=Count('sections__lessons', distinct=True)
