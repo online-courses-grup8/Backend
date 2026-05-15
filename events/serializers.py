@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from events.models import Event
-
+from events.models import Event, EventRegistration
 
 class EventListSerializer(serializers.ModelSerializer):
     # event listesi sayfası için
@@ -38,3 +37,12 @@ class EventDetailSerializer(serializers.ModelSerializer):
         if obj.image3:
             return obj.image3.name.split("/")[-1]
         return None
+
+
+
+class EventRegistrationSerializer(serializers.ModelSerializer):
+    # etkinliğe kayıt için
+    class Meta:
+        model = EventRegistration
+        fields = ['id', 'event', 'registered_at']
+        read_only_fields = ['id', 'registered_at']

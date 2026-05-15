@@ -3,7 +3,13 @@ from rest_framework.permissions import AllowAny
 from utils.pagination import CustomPageNumberPagination
 from events.serializers import EventListSerializer, EventDetailSerializer
 from events.selectors import get_all_events, get_event_by_slug
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import ValidationError
+from events.services import register_for_event
+from events.serializers import EventRegistrationSerializer
 
 
 class EventListView(generics.ListAPIView):
@@ -23,3 +29,24 @@ class EventDetailView(generics.RetrieveAPIView):
 
     def get_object(self):
         return get_event_by_slug(self.kwargs['slug'])
+
+
+class EventRegisterView(APIView):
+    # POST /api/v1/events/<slug>/register/ → etkinliğe kayıt olur
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, slug):
+        try:
+            registration = register_for_event(request.user, slug)
+        except ValidationError as e:
+            return Response({
+                "status": 400,
+                "payload": None,
+                "errorMessage": {"detail": e.message}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "status": 201,
+            "payload": EventRegistrationSerializer(registration).data,
+            "errorMessage": None
+        }, status=status.HTTP_201_CREATED)

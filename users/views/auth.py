@@ -29,6 +29,7 @@ class RegisterView(APIView):
                     "email": user.email,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
+                    "profile_image": user.profile_image.name.split("/")[-1] if user.profile_image else "anonymous.jpeg",
                 }
             },
             "errorMessage": None
@@ -66,6 +67,7 @@ class LoginView(APIView):
                     "email": user.email,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
+
                 }
             },
             "errorMessage": None

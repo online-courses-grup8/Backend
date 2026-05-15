@@ -10,3 +10,4 @@ def get_all_events():
 def get_event_by_slug(slug):
     """Slug'a göre tek etkinlik döner, bulunamazsa 404 fırlatır."""
     return get_object_or_404(Event, slug=slug)
+

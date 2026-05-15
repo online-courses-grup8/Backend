@@ -1,8 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-
-from django.core.validators import MinValueValidator
+from django.conf import settings
 
 class Event(models.Model):
     title = models.CharField(max_length=200)  # etkinlik adı
@@ -44,3 +43,27 @@ class Event(models.Model):
     class Meta:
         verbose_name_plural = 'Events'
         ordering = ['-date']  # en yeni etkinlik önce gelir
+
+
+
+
+
+class EventRegistration(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='event_registrations'
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        related_name='registrations'
+    )
+    registered_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'event']  # aynı kullanıcı aynı etkinliğe iki kez kayıt olamaz
+        verbose_name_plural = 'Event Registrations'
+
+    def __str__(self):
+        return f"{self.user.email} - {self.event.title}"

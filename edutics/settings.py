@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'blog',
     'core',
     'payments',
+    'storages',
 
 ]
 
@@ -148,11 +149,22 @@ JWT_REFRESH_TOKEN_LIFETIME = config('JWT_REFRESH_TOKEN_LIFETIME', cast=int, defa
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Media
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+# Azure Blob Storage
+AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY')
+AZURE_CONTAINER = config('AZURE_CONTAINER')
+AZURE_CUSTOM_DOMAIN = f'{config("AZURE_ACCOUNT_NAME")}.blob.core.windows.net'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{config("AZURE_CONTAINER")}/'
+
+# Storage backend - Django 4.2+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 LANGUAGE_CODE = 'en-us'
 
