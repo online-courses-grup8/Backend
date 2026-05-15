@@ -153,9 +153,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 AZURE_ACCOUNT_NAME = config('AZURE_ACCOUNT_NAME', default='')
 AZURE_ACCOUNT_KEY = config('AZURE_ACCOUNT_KEY', default='')
 AZURE_CONTAINER = config('AZURE_CONTAINER', default='media')
-AZURE_CUSTOM_DOMAIN = f'{config("AZURE_ACCOUNT_NAME")}.blob.core.windows.net'
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{config("AZURE_CONTAINER")}/'
-
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/'
 # Storage backend - Django 4.2+
 STORAGES = {
     "default": {
