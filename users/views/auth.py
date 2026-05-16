@@ -3,7 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-
+from django.core.exceptions import ValidationError
+from users.services.auth import refresh_access_token
 from users.serializers.auth import RegisterSerializer, LoginSerializer
 from users.services.auth import register_user, login_user
 
@@ -72,3 +73,35 @@ class LoginView(APIView):
             },
             "errorMessage": None
         }, status=status.HTTP_200_OK)
+
+
+class RefreshTokenView(APIView):
+    # POST /api/v1/auth/refresh/ → yeni access token üretir
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        refresh_token = request.data.get('refresh')
+        if not refresh_token:
+            return Response({
+                "status": 400,
+                "payload": None,
+                "errorMessage": {"detail": "Refresh token gerekli."}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            access_token, expires_at = refresh_access_token(refresh_token)
+        except ValidationError as e:
+            return Response({
+                "status": 400,
+                "payload": None,
+                "errorMessage": {"detail": e.message}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "status": 200,
+            "payload": {
+                "access": access_token,
+                "expires_at": expires_at,
+            },
+            "errorMessage": None
+        })

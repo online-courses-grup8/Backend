@@ -1,6 +1,6 @@
 # users/urls.py
 from django.urls import path
-from users.views.auth import RegisterView, LoginView
+from users.views.auth import RegisterView, LoginView, RefreshTokenView
 from users.views.profile import ProfileView, ProfileUpdateView, ChangePasswordView, DeleteAccountView
 from users.views.my_events import MyEventListView
 from users.views.my_home import RecommendedCoursesView, MyInstructorsView
@@ -17,6 +17,8 @@ urlpatterns = [
     path('profile/delete/', DeleteAccountView.as_view(), name='delete-account'),
     path('profile/my-events/', MyEventListView.as_view(), name='my-events'),
     path('profile/recommended-courses/', RecommendedCoursesView.as_view(), name='recommended-courses'),
-path('profile/my-instructors/', MyInstructorsView.as_view(), name='my-instructors'),
+    path('profile/my-instructors/', MyInstructorsView.as_view(), name='my-instructors'),
+    # POST /api/v1/auth/refresh/  yeni access token üretir
+    path('auth/refresh/', RefreshTokenView.as_view(), name='auth-refresh'),
 
 ]

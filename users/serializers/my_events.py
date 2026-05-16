@@ -13,8 +13,6 @@ class EventSummarySerializer(serializers.Serializer):
     day = serializers.SerializerMethodField()
     month = serializers.SerializerMethodField()
     timeRange = serializers.SerializerMethodField()
-    imageName = serializers.SerializerMethodField()
-
     def get_year(self, obj):
         return str(obj.date.year)
 
@@ -32,11 +30,6 @@ class EventSummarySerializer(serializers.Serializer):
         end = obj.end_time.strftime('%I:%M %p')
         return f"{start} - {end}"
 
-    def get_imageName(self, obj):
-        # sadece dosya adını döner
-        if obj.image:
-            return obj.image.name.split("/")[-1]
-        return None
 
 
 class MyEventSerializer(serializers.ModelSerializer):
