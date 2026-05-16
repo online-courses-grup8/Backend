@@ -2,13 +2,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from core.serializers.contact import ContactMessageSerializer
 from core.services.contact import create_contact_message
 
 
 class ContactMessageCreateView(APIView):
-    # POST /api/v1/contact/ → iletişim formunu kaydeder
+    # POST /api/v1/contact/  iletişim formunu kaydeder
     permission_classes = [AllowAny]
 
     def post(self, request):
