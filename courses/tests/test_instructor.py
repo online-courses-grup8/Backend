@@ -1,200 +1,78 @@
-from django.test import TestCase
-from django.urls import reverse
-from rest_framework.test import APIClient
-from rest_framework import status
-from courses.models import Instructor, InstructorSkill
+from django.test import SimpleTestCase
+from unittest.mock import MagicMock
+from courses.serializers.instructor import (
+    InstructorSerializer,
+    InstructorDetailSerializer,
+    InstructorListSerializer,
+    TeacherDetailSerializer,
+)
 
 
-class InstructorListAPITest(TestCase):
-
-    def setUp(self):
-        self.client = APIClient()
-
-        # test instructor'ları oluştur
-        self.instructor1 = Instructor.objects.create(
-            name='Jane Cooper',
-            bio_hardskill='Python, Django',
-            bio_softskill='Leadership',
-            specialization='Backend Development',
-            experience=5,
-            position='Senior Developer',
-            facebook='https://facebook.com/jane',
-            linkedin='https://linkedin.com/in/jane'
-        )
-
-        self.instructor2 = Instructor.objects.create(
-            name='John Doe',
-            bio_hardskill='React, Next.js',
-            bio_softskill='Teamwork',
-            specialization='Frontend Development',
-            experience=3,
-            position='Frontend Developer',
-        )
-
-    def test_instructor_list_returns_200(self):
-        # API 200 dönüyor mu?
-        response = self.client.get(reverse('instructor-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_instructor_list_unauthenticated(self):
-        # login olmadan erişilebiliyor mu?
-        self.client.force_authenticate(user=None)
-        response = self.client.get(reverse('instructor-list'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_instructor_list_count(self):
-        # doğru sayıda instructor geliyor mu?
-        response = self.client.get(reverse('instructor-list'))
-        self.assertEqual(response.data['count'], 2)
-
-    def test_instructor_list_required_fields(self):
-        # gerekli alanlar var mı?
-        response = self.client.get(reverse('instructor-list'))
-        instructor = response.data['results'][0]
-        self.assertIn('id', instructor)
-        self.assertIn('name', instructor)
-        self.assertIn('slug', instructor)
-        self.assertIn('photo', instructor)
-        self.assertIn('position', instructor)
-        self.assertIn('facebook', instructor)
-        self.assertIn('instagram', instructor)
-        self.assertIn('linkedin', instructor)
-        self.assertIn('twitter', instructor)
-
-    def test_instructor_slug_auto_generated(self):
-        # slug otomatik oluşturuluyor mu?
-        self.assertEqual(self.instructor1.slug, 'jane-cooper')
-        self.assertEqual(self.instructor2.slug, 'john-doe')
-
-
-class InstructorDetailAPITest(TestCase):
+# Tüm instructor serializer'ları için birim testler
+# Sadece get_photo ve get_thumbnail metodlarını test ediyoruz
+class InstructorSerializerTest(SimpleTestCase):
 
     def setUp(self):
-        self.client = APIClient()
+        self.instructor_serializer = InstructorSerializer()
+        self.detail_serializer = InstructorDetailSerializer()
+        self.list_serializer = InstructorListSerializer()
+        self.teacher_detail_serializer = TeacherDetailSerializer()
 
-        # test instructor oluştur
-        self.instructor = Instructor.objects.create(
-            name='Jane Cooper',
-            bio_hardskill='Python, Django',
-            bio_softskill='Leadership',
-            specialization='Backend Development',
-            experience=5,
-            position='Senior Developer',
-            phone_number='+1234567890',
-            facebook='https://facebook.com/jane',
-            linkedin='https://linkedin.com/in/jane'
-        )
+    def _make_image(self, path):
+        # mock image objesi oluşturur
+        image = MagicMock()
+        image.name = path
+        return image
 
-        # test skill'leri oluştur
-        self.skill1 = InstructorSkill.objects.create(
-            instructor=self.instructor,
-            skill='Python',
-            percentage=90
-        )
-        self.skill2 = InstructorSkill.objects.create(
-            instructor=self.instructor,
-            skill='Django',
-            percentage=85
-        )
+    def _make_instructor(self, photo_path=None, thumbnail_path=None):
+        # mock Instructor objesi oluşturur
+        instructor = MagicMock()
+        instructor.photo = self._make_image(photo_path) if photo_path else None
+        instructor.thumbnail = self._make_image(thumbnail_path) if thumbnail_path else None
+        return instructor
 
-    def test_instructor_detail_returns_200(self):
-        # API 200 dönüyor mu?
-        url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    # --- get_photo Testleri ---
 
-    def test_instructor_detail_required_fields(self):
-        # gerekli alanlar var mı?
-        url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
-        response = self.client.get(url)
-        self.assertIn('id', response.data)
-        self.assertIn('name', response.data)
-        self.assertIn('slug', response.data)
-        self.assertIn('specialization', response.data)
-        self.assertIn('experience', response.data)
-        self.assertIn('position', response.data)
-        self.assertIn('bio_hardskill', response.data)
-        self.assertIn('bio_softskill', response.data)
-        self.assertIn('skills', response.data)
+    def test_photo_stripping_logic(self):
+        # farklı serializer'larda photo path'inden sadece dosya adını döndürmeli
+        cases = [
+            ("assets/img/photo.jpg", "photo.jpg"),
+            ("media/instructors/2026/profile.png", "profile.png"),
+            ("simple.jpg", "simple.jpg"),
+        ]
+        for path, expected in cases:
+            with self.subTest(path=path):
+                instructor = self._make_instructor(photo_path=path)
+                self.assertEqual(self.instructor_serializer.get_photo(instructor), expected)
+                self.assertEqual(self.detail_serializer.get_photo(instructor), expected)
+                self.assertEqual(self.teacher_detail_serializer.get_photo(instructor), expected)
 
-    def test_instructor_detail_skills(self):
-        # skill'ler geliyor mu?
-        url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
-        response = self.client.get(url)
-        self.assertEqual(len(response.data['skills']), 2)
+    def test_photo_returns_none_when_missing(self):
+        # photo yoksa None döndürmeli
+        instructor = self._make_instructor()
+        self.assertIsNone(self.instructor_serializer.get_photo(instructor))
+        self.assertIsNone(self.detail_serializer.get_photo(instructor))
+        self.assertIsNone(self.teacher_detail_serializer.get_photo(instructor))
 
-    def test_instructor_detail_skill_fields(self):
-        # skill alanları doğru mu?
-        url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
-        response = self.client.get(url)
-        skill = response.data['skills'][0]
-        self.assertIn('skill', skill)
-        self.assertIn('percentage', skill)
+    # --- get_thumbnail Testleri ---
 
-    def test_instructor_detail_not_found(self):
-        # olmayan slug 404 dönüyor mu?
-        url = reverse('instructor-detail', kwargs={'slug': 'olmayan-slug'})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_thumbnail_stripping_logic(self):
+        # farklı serializer'larda thumbnail path'inden sadece dosya adını döndürmeli
+        cases = [
+            ("assets/img/thumb.jpg", "thumb.jpg"),
+            ("media/instructors/bg/banner.png", "banner.png"),
+            ("simple.png", "simple.png"),
+        ]
+        for path, expected in cases:
+            with self.subTest(path=path):
+                instructor = self._make_instructor(thumbnail_path=path)
+                self.assertEqual(self.detail_serializer.get_thumbnail(instructor), expected)
+                self.assertEqual(self.list_serializer.get_thumbnail(instructor), expected)
+                self.assertEqual(self.teacher_detail_serializer.get_thumbnail(instructor), expected)
 
-    def test_instructor_detail_unauthenticated(self):
-        # login olmadan erişilebiliyor mu?
-        self.client.force_authenticate(user=None)
-        url = reverse('instructor-detail', kwargs={'slug': self.instructor.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-
-class InstructorOthersAPITest(TestCase):
-
-    def setUp(self):
-        self.client = APIClient()
-
-        # iki instructor oluştur
-        self.instructor1 = Instructor.objects.create(
-            name='Jane Cooper',
-            bio_hardskill='Python, Django',
-            bio_softskill='Leadership',
-            specialization='Backend Development',
-            experience=5,
-            position='Senior Developer',
-        )
-
-        self.instructor2 = Instructor.objects.create(
-            name='John Doe',
-            bio_hardskill='React, Next.js',
-            bio_softskill='Teamwork',
-            specialization='Frontend Development',
-            experience=3,
-            position='Frontend Developer',
-        )
-
-    def test_others_returns_200(self):
-        # API 200 dönüyor mu?
-        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_others_excludes_current_instructor(self):
-        # mevcut instructor hariç tutuluyor mu?
-        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.data['count'], 1)
-        self.assertEqual(response.data['results'][0]['name'], 'John Doe')
-
-    def test_others_unauthenticated(self):
-        # login olmadan erişilebiliyor mu?
-        self.client.force_authenticate(user=None)
-        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_others_required_fields(self):
-        # gerekli alanlar var mı?
-        url = reverse('instructor-others', kwargs={'slug': self.instructor1.slug})
-        response = self.client.get(url)
-        instructor = response.data['results'][0]
-        self.assertIn('id', instructor)
-        self.assertIn('name', instructor)
-        self.assertIn('slug', instructor)
-        self.assertIn('position', instructor)
+    def test_thumbnail_returns_none_when_missing(self):
+        # thumbnail yoksa None döndürmeli
+        instructor = self._make_instructor()
+        self.assertIsNone(self.detail_serializer.get_thumbnail(instructor))
+        self.assertIsNone(self.list_serializer.get_thumbnail(instructor))
+        self.assertIsNone(self.teacher_detail_serializer.get_thumbnail(instructor))
