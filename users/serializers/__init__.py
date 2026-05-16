@@ -1,3 +1,4 @@
 from .auth import RegisterSerializer, LoginSerializer
 from .profile import ProfileSerializer, ProfileUpdateSerializer, ChangePasswordSerializer, DeleteAccountSerializer
 from .my_events import EventSummarySerializer,MyEventSerializer,EventRegistration
+from .my_courses import MyCourseSerializer, MyCourseLessonSerializer, MyCourseSectionSerializer
