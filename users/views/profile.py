@@ -9,7 +9,7 @@ from users.serializers.profile import ProfileSerializer, ProfileUpdateSerializer
 from users.services.profile import update_user_profile, change_user_password, delete_user_account
 
 class ProfileView(APIView):
-    # GET /api/v1/profile/  profil bilgilerini döner
+    # GET /api/v1/profile/ → profil bilgilerini döner
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -23,7 +23,36 @@ class ProfileView(APIView):
 
 
 class ProfileUpdateView(APIView):
-    # PATCH /api/v1/profile/update/  profil bilgilerini günceller
+    # PATCH /api/v1/profile/update/ → profil bilgilerini günceller
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        serializer = ProfileUpdateSerializer(data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+
+        user = update_user_profile(request.user, serializer.validated_data)
+        updated = get_user_profile(user)
+
+        return Response({
+            "status": 200,
+            "payload": ProfileSerializer(updated).data,
+            "errorMessage": None
+        })
+class ProfileView(APIView):
+    # GET /api/v1/profile/ → profil bilgilerini döner
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = get_user_profile(request.user)
+        serializer = ProfileSerializer(user)
+        return Response({
+            "status": 200,
+            "payload": serializer.data,
+            "errorMessage": None
+        })
+
+class ProfileUpdateView(APIView):
+    # PATCH /api/v1/profile/update/ → profil bilgilerini günceller
     permission_classes = [IsAuthenticated]
 
     def patch(self, request):
@@ -40,7 +69,7 @@ class ProfileUpdateView(APIView):
         })
 
 class ChangePasswordView(APIView):
-    # PUT /api/v1/profile/change-password/  şifre değiştirir
+    # PUT /api/v1/profile/change-password/ → şifre değiştirir
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
@@ -67,7 +96,7 @@ class ChangePasswordView(APIView):
         })
 
 class DeleteAccountView(APIView):
-    # DELETE /api/v1/profile/delete/  hesabı siler
+    # DELETE /api/v1/profile/delete/ → hesabı siler
     permission_classes = [IsAuthenticated]
 
     def delete(self, request):

@@ -7,7 +7,7 @@ class InstructorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Instructor
-        fields = ['id', 'name', 'slug', 'photo', 'specialization']
+        fields = ['id', 'name', 'photo', 'specialization']
 
     def get_photo(self, obj):
         if obj.photo:

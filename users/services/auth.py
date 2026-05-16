@@ -4,7 +4,7 @@ import datetime
 from django.conf import settings
 from django.contrib.auth import get_user_model, authenticate
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+
 User = get_user_model()
 
 
@@ -53,24 +53,3 @@ def login_user(email, password):
 
     access_token, refresh_token, expires_at = generate_tokens(user)  # bu kısımda frontende acces token süresi döner
     return user, access_token, refresh_token, expires_at
-
-
-def refresh_access_token(refresh_token):
-    # refresh token ile yeni access token üretir
-    try:
-        payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=['HS256'])
-    except jwt.ExpiredSignatureError:
-        raise ValidationError('Refresh token süresi dolmuş.')
-    except jwt.InvalidTokenError:
-        raise ValidationError('Geçersiz refresh token.')
-
-    if payload.get('type') != 'refresh':
-        raise ValidationError('Geçersiz token türü.')
-
-    try:
-        user = User.objects.get(id=payload['user_id'])
-    except User.DoesNotExist:
-        raise ValidationError('Kullanıcı bulunamadı.')
-
-    access_token, _, expires_at = generate_tokens(user)
-    return access_token, expires_at
