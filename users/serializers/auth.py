@@ -22,7 +22,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if len(value.strip()) < 2:
             raise serializers.ValidationError("First name must be at least 2 characters.")
         # sadece harf içermeli
-        if not value.strip().isalpha():
+        if not value.strip().replace(" ", "").isalpha():
             raise serializers.ValidationError("First name must contain only letters.")
         return value.strip()
 
@@ -34,8 +34,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         if len(value.strip()) < 2:
             raise serializers.ValidationError("Last name must be at least 2 characters.")
         # sadece harf içermeli
-        if not value.strip().isalpha():
-            raise serializers.ValidationError("Last name must contain only letters.")
+        if not value.strip().replace(" ", "").isalpha():
+            raise serializers.ValidationError("First name must contain only letters.")
         return value.strip()
 
     def validate_email(self, value):
