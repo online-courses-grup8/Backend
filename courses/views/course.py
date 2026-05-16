@@ -85,3 +85,5 @@ class CourseReviewsView(APIView):
             },
             "reviews": reviews.data
         })
+
+

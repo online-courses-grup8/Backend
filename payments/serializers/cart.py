@@ -7,11 +7,12 @@ class CartItemSerializer(serializers.ModelSerializer):
     # sepetteki her kurs için özet bilgi
     course_id = serializers.IntegerField(source='course.id', read_only=True)
     course_title = serializers.CharField(source='course.title', read_only=True)
+    course_slug = serializers.CharField(source='course.slug', read_only=True)
     thumbnail = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ['id', 'course_id', 'course_title', 'thumbnail', 'price', 'added_at']
+        fields = ['id', 'course_id', 'course_title','course_slug', 'thumbnail', 'price', 'added_at']
 
     def get_thumbnail(self, obj):
         # sadece dosya adını döner
