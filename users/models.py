@@ -2,12 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 def user_image_path(instance, filename):
-    return f'assets/profile/{filename}'
+    return filename  # sadece dosya adını döner
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     profile_image = models.ImageField(
-        upload_to=user_image_path,
+        upload_to='assets/img',
         null=True,
         blank=True,
         default='anonymous.jpeg'
