@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MinValueValidator
 import uuid
+from decimal import Decimal
 
 
 class Payment(models.Model):
@@ -21,7 +22,7 @@ class Payment(models.Model):
     amount = models.DecimalField(
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0.0)]  # tutar negatif olamaz
+        validators=[MinValueValidator(0)]  # tutar negatif olamaz
     )  # toplam ödeme tutarı
     payment_date = models.DateTimeField(auto_now_add=True)  # ödeme tarihi, otomatik
     status = models.CharField(
@@ -60,7 +61,7 @@ class PaymentItem(models.Model):
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0.0)]  # satın alma anındaki fiyat
+        validators=[MinValueValidator(0)]  # satın alma anındaki fiyat
     )
 
     def __str__(self):
