@@ -45,7 +45,7 @@ class CourseLesson(models.Model):
     order = models.IntegerField(default=0)  # sıralama için
     is_free = models.BooleanField(default=False)  # ücretsiz önizleme var mı
     is_previewed = models.BooleanField(default=False)  # izlenmiş mi (genel önizleme)
-
+    video_url = models.URLField(null=True, blank=True)
     def __str__(self):
         return f"{self.section.title} - {self.title}"
 
