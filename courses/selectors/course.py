@@ -82,3 +82,19 @@ def get_course_reviews(slug):
 
     return course, summary
 
+
+
+def get_published_courses_by_category(category_slug=None):
+    # yayınlanan kursları getirir, öğrenci ve ders sayısını annotate eder
+    queryset = Course.objects.filter(is_published=True).annotate(
+        student_count=Count("enrollments", distinct=True),
+        lesson_count=Count("sections__lessons", distinct=True)
+    ).select_related(
+        "category", "instructor"
+    ).order_by("-created_at")
+
+    if category_slug:
+        # kategori slug'ına göre filtrele
+        queryset = queryset.filter(category__slug=category_slug)
+
+    return queryset

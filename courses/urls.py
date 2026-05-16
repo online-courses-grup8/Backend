@@ -9,6 +9,8 @@ from .views import (
     InstructorListView,
     InstructorDetailView,
     InstructorOthersView,
+    CategoryListView,
+    CourseByCategoryView,
 )
 
 urlpatterns = [
@@ -28,4 +30,10 @@ urlpatterns = [
     path('instructors/', InstructorListView.as_view(), name='instructor-list'),
     path('instructors/<slug:slug>/', InstructorDetailView.as_view(), name='instructor-detail'),
     path('instructors/<slug:slug>/others/', InstructorOthersView.as_view(), name='instructor-others'),
+   #Category endpointleri
+    # GET /api/v1/categories/
+    path('categories/', CategoryListView.as_view(), name='category-list'),
+
+    # GET /api/v1/courses/by-category/ - kategoriye gore kurs listesi
+    path('courses/by-category/', CourseByCategoryView.as_view(), name='course-by-category'),
 ]
