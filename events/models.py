@@ -17,6 +17,7 @@ class Event(models.Model):
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)  # harita için
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)  # harita için
     is_online = models.BooleanField(default=False)  # online mı yüz yüze mi
+    category = models.CharField(max_length=100, null=True, blank=True)  # etkinlik kategorisi, örn: Skills, Programming
     language = models.CharField(max_length=50)  # etkinlik dili
     phone = models.CharField(max_length=20, null=True, blank=True)  # iletişim telefonu, opsiyonel
     email = models.EmailField(null=True, blank=True)  # iletişim emaili, opsiyonel
