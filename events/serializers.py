@@ -46,3 +46,24 @@ class EventRegistrationSerializer(serializers.ModelSerializer):
         model = EventRegistration
         fields = ['id', 'event', 'registered_at']
         read_only_fields = ['id', 'registered_at']
+
+
+
+class HomeEventSerializer(serializers.ModelSerializer):
+    # ana sayfa upcoming events için
+    image = serializers.SerializerMethodField()
+    timeRange = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'slug', 'description', 'image', 'category', 'timeRange']
+
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.name.split('/')[-1]
+        return None
+
+    def get_timeRange(self, obj):
+        start = obj.start_time.strftime('%H:%M')
+        end = obj.end_time.strftime('%H:%M')
+        return f"{start} - {end}"

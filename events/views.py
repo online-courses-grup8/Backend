@@ -10,7 +10,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ValidationError
 from events.services import register_for_event
 from events.serializers import EventRegistrationSerializer
-
+from events.selectors import get_home_events
+from events.serializers import HomeEventSerializer
 
 class EventListView(generics.ListAPIView):
     # tüm etkinlikleri listeler
@@ -50,3 +51,16 @@ class EventRegisterView(APIView):
             "payload": EventRegistrationSerializer(registration).data,
             "errorMessage": None
         }, status=status.HTTP_201_CREATED)
+
+
+
+class HomeEventListView(APIView):
+    # GET /api/v1/events/upcoming/ - ana sayfa icin yaklasan etkinlikler
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        events = get_home_events()
+        paginator = CustomPageNumberPagination()
+        result = paginator.paginate_queryset(events, request)
+        serializer = HomeEventSerializer(result, many=True)
+        return paginator.get_paginated_response(serializer.data)
