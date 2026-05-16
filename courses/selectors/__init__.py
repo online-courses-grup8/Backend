@@ -1,3 +1,4 @@
-from .course import get_published_courses
+from .course import get_published_courses, get_published_courses_by_category
 from .comment import get_course_for_comment
 from .instructor import get_all_instructors, get_instructor_by_slug,get_other_instructors
+from .category import get_categories_with_course_count

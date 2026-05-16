@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from courses.selectors.course import get_published_courses_by_category
 from utils.pagination import CustomPageNumberPagination
 from courses.serializers import (
     CourseListSerializer,
@@ -86,4 +86,12 @@ class CourseReviewsView(APIView):
             "reviews": reviews.data
         })
 
+class CourseByCategoryView(generics.ListAPIView):
+    # GET /api/v1/courses/?category=<slug>  kategoriye göre kurs listesi
+    permission_classes = [AllowAny]
+    serializer_class = CourseListSerializer
+    pagination_class = CustomPageNumberPagination
 
+    def get_queryset(self):
+        category_slug = self.request.query_params.get('category', None)
+        return get_published_courses_by_category(category_slug=category_slug)
