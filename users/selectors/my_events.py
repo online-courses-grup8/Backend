@@ -4,4 +4,4 @@ from events.models import EventRegistration
 
 def get_my_events(user):
     # kullanıcının kayıtlı olduğu etkinlikleri döner
-    return EventRegistration.objects.filter(user=user).select_related('event')
+    return EventRegistration.objects.filter(user=user).select_related('event').order_by('-registered_at')
