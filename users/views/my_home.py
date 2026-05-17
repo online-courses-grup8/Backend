@@ -8,7 +8,7 @@ from courses.serializers.instructor import InstructorListSerializer
 from users.selectors.my_home import get_recommended_courses, get_my_instructors
 
 class RecommendedCoursesView(APIView):
-    # GET /api/v1/profile/recommended-courses/ → kategoriye göre önerilen kurslar
+    # GET /api/v1/profile/recommended-courses/  kategoriye göre önerilen kurslar
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -23,7 +23,7 @@ class RecommendedCoursesView(APIView):
 
 
 class MyInstructorsView(APIView):
-    # GET /api/v1/profile/my-instructors/ → kullanıcının kurslarının instructorları
+    # GET /api/v1/profile/my-instructors/  kullanıcının kurslarının instructorları
     permission_classes = [IsAuthenticated]
 
     def get(self, request):

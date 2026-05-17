@@ -33,7 +33,7 @@ class EventDetailView(generics.RetrieveAPIView):
 
 
 class EventRegisterView(APIView):
-    # POST /api/v1/events/<slug>/register/ → etkinliğe kayıt olur
+    # POST /api/v1/events/<slug>/register/  etkinliğe kayıt olur
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
