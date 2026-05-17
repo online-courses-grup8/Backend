@@ -1,10 +1,19 @@
 """
+<<<<<<< HEAD
 Test Case #270 / Task #270 - News module unit test coverage
 Azure DevOps Work Item: https://dev.azure.com/grup8devops/Online_Course/_workitems/edit/270
 
 Goal:
 Review and verify unit test coverage for the news/blog list serializer helpers
 that format image fields for API responses.
+=======
+Test Case #272 / Task #272 - News module unit test review
+Azure DevOps Work Item: https://dev.azure.com/grup8devops/Online_Course/_workitems/edit/272
+
+Goal:
+Review and keep unit test coverage for the news/blog serializer helpers that
+format image fields for API responses.
+>>>>>>> origin/staging
 
 Flow:
 1. Verify thumbnail path values are returned as filenames
