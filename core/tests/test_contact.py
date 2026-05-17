@@ -12,17 +12,17 @@ class ContactMessageSerializerTest(SimpleTestCase):
             "message": "Bu mesaj en az on karakter olmalıdır."
         }
 
-    # --- 1. Validasyon Pipeline Testleri ---
+    # 1. Validasyon Pipeline Testleri
 
     def test_serializer_with_valid_data(self):
-        """Geçerli veriyle serializer'ın sorunsuz çalıştığını doğrular."""
+        # Geçerli veriyle serializer'ın sorunsuz çalıştığını doğrular.
         serializer = ContactMessageSerializer(data=self.base_data)
 
         self.assertTrue(serializer.is_valid())
         self.assertEqual(serializer.errors, {})
 
     def test_required_fields(self):
-        """Zorunlu alanlar eksik gönderildiğinde hata dönmeli."""
+        # Zorunlu alanlar eksik gönderildiğinde hata dönmeli.
         fields = ["name", "email", "message"]
 
         for field in fields:
@@ -35,10 +35,10 @@ class ContactMessageSerializerTest(SimpleTestCase):
                 self.assertFalse(serializer.is_valid())
                 self.assertIn(field, serializer.errors)
 
-    # --- 2. Min Length Testleri ---
+    # 2. Min Length Testleri
 
     def test_min_length_validation(self):
-        """Serializer/model min_length validasyonlarını doğrular."""
+        # Serializer/model min_length validasyonlarını doğrular.
         test_cases = [
             ("name", "A", False),
             ("name", "An", True),
@@ -58,10 +58,10 @@ class ContactMessageSerializerTest(SimpleTestCase):
                 if not expected_valid:
                     self.assertIn(field, serializer.errors)
 
-    # --- 3. Email Format Testleri ---
+    # 3. Email Format Testleri
 
     def test_email_format_validation(self):
-        """Geçersiz email formatlarının reddedildiğini doğrular."""
+        # Geçersiz email formatlarının reddedildiğini doğrular.
         invalid_emails = [
             "yanlis-mail",
             "ayse@",
@@ -80,10 +80,10 @@ class ContactMessageSerializerTest(SimpleTestCase):
                 self.assertFalse(serializer.is_valid())
                 self.assertIn("email", serializer.errors)
 
-    # --- 4. Whitespace Stripping Testleri ---
+    # 4. Whitespace Stripping Testleri
 
     def test_whitespace_stripping(self):
-        """Baş ve sondaki boşlukların temizlendiğini doğrular."""
+        # Baş ve sondaki boşlukların temizlendiğini doğrular.
         data = {
             "name": "  Ayşe Yılmaz  ",
             "email": "  ayse@example.com  \n",
@@ -109,10 +109,10 @@ class ContactMessageSerializerTest(SimpleTestCase):
             "Bu mesaj içeriği boşluklu geliyor."
         )
 
-    # --- 5. Sadece Boşluk Girilmesi Testleri ---
+    # 5. Sadece Boşluk Girilmesi Testleri
 
     def test_reject_only_whitespace_inputs(self):
-        """Sadece boşluk içeren girdilerin reddedildiğini doğrular."""
+        # Sadece boşluk içeren girdilerin reddedildiğini doğrular.
         fields = ["name", "email", "message"]
 
         for field in fields:

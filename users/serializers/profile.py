@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 import re
-
+from users.serializers.fields import Base64ImageField
 User = get_user_model()
 
 
@@ -28,7 +28,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         return "anonymous.jpeg"
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-    # profil güncelleme için - sadece değiştirilen alanlar gönderilir
+    profile_image = Base64ImageField(required=False, allow_null=True)    # profil güncelleme için - sadece değiştirilen alanlar gönderilir
+
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'phone_number', 'profile_image']
@@ -64,6 +65,8 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             if not re.match(r'^[\d\s\+\-]{7,15}$', value):
                 raise serializers.ValidationError("Enter a valid phone number.")
             return value
+
+     
 
 class ChangePasswordSerializer(serializers.Serializer):
     # şifre değiştirme için gerekli alanlar

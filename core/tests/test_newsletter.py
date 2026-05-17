@@ -11,10 +11,10 @@ class NewsletterSerializerTest(SimpleTestCase):
             "NewsletterSubscriber.objects.filter"
         )
 
-    # --- 1. Email Validasyon Testleri ---
+    # 1. Email Validasyon Testleri
 
     def test_valid_email_accepted(self):
-        """Geçerli email kabul edilmeli."""
+        # Geçerli email kabul edilmeli.
         with patch(self.filter_patch_path) as mock_filter:
             mock_filter.return_value.exists.return_value = False
 
@@ -30,7 +30,7 @@ class NewsletterSerializerTest(SimpleTestCase):
             )
 
     def test_invalid_email_rejected(self):
-        """Geçersiz email formatları reddedilmeli."""
+        # Geçersiz email formatları reddedilmeli.
         invalid_emails = [
             "yanlis-mail",
             "ayse@",
@@ -49,10 +49,10 @@ class NewsletterSerializerTest(SimpleTestCase):
                     self.assertFalse(serializer.is_valid())
                     self.assertIn("email", serializer.errors)
 
-    # --- 2. Email Dönüştürme Testleri ---
+    # 2. Email Dönüştürme Testleri
 
     def test_email_converted_to_lowercase_and_stripped(self):
-        """Email küçük harfe çevrilmeli ve boşluklar temizlenmeli."""
+        # Email küçük harfe çevrilmeli ve boşluklar temizlenmeli.
         with patch(self.filter_patch_path) as mock_filter:
             mock_filter.return_value.exists.return_value = False
 
@@ -66,10 +66,10 @@ class NewsletterSerializerTest(SimpleTestCase):
                 "test@example.com"
             )
 
-    # --- 3. Duplicate Email Testleri ---
+    # 3. Duplicate Email Testleri
 
     def test_duplicate_email_rejected(self):
-        """Zaten kayıtlı email reddedilmeli."""
+        # Zaten kayıtlı email reddedilmeli.
         with patch(self.filter_patch_path) as mock_filter:
             mock_filter.return_value.exists.return_value = True
 
@@ -81,7 +81,7 @@ class NewsletterSerializerTest(SimpleTestCase):
             self.assertIn("email", serializer.errors)
 
     def test_duplicate_email_check_uses_normalized_email(self):
-        """Duplicate kontrolü normalize edilmiş email ile yapılmalı."""
+        # Duplicate kontrolü normalize edilmiş email ile yapılmalı.
         with patch(self.filter_patch_path) as mock_filter:
             mock_filter.return_value.exists.return_value = True
 

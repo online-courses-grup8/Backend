@@ -8,7 +8,7 @@ from users.services.my_courses import complete_lesson
 
 
 class MyCourseListView(APIView):
-    # GET /api/v1/profile/my-courses/ → satın aldığı kursları listeler
+    # GET /api/v1/profile/my-courses/  satın aldığı kursları listeler
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -22,7 +22,7 @@ class MyCourseListView(APIView):
 
 
 class MyCourseDetailView(APIView):
-    # GET /api/v1/profile/my-courses/<slug>/curriculum/ → kursa ait bölüm ve dersler
+    # GET /api/v1/profile/my-courses/<slug>/curriculum/  kursa ait bölüm ve dersler
     permission_classes = [IsAuthenticated]
 
     def get(self, request, slug):
@@ -44,7 +44,7 @@ class MyCourseDetailView(APIView):
 
 
 class CompleteLessonView(APIView):
-    # POST /api/v1/profile/my-courses/<slug>/lessons/<lesson_id>/complete/ → dersi tamamlar
+    # POST /api/v1/profile/my-courses/<slug>/lessons/<lesson_id>/complete/  dersi tamamlar
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug, lesson_id):
