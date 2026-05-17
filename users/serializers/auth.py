@@ -1,7 +1,7 @@
 # users/serializers/auth.py
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from users.serializers.fields import Base64ImageField
 User = get_user_model()
 
 
@@ -9,10 +9,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     # kayıt formu için gerekli alanlar
     password = serializers.CharField(write_only=True, min_length=8)
     confirm_password = serializers.CharField(write_only=True)
-
+    phone_number = serializers.CharField(max_length=20, required=False, allow_blank=True)
+    profile_image = Base64ImageField(required=False, allow_null=True)
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password', 'profile_image']
+        fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password', 'profile_image', 'phone_number']
 
     def validate_first_name(self, value):
         # boş olamaz
@@ -60,6 +61,16 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
         return attrs
+
+    def validate_phone_number(self, value):
+        import re
+        # boşsa geç
+        if not value.strip():
+            return value
+        # sadece rakam, +, -, boşluk içerebilir, 7-15 karakter
+        if not re.match(r'^[\d\s\+\-]{7,17}$', value):
+            raise serializers.ValidationError("Enter a valid phone number.")
+        return value
 
 
 class LoginSerializer(serializers.Serializer):
