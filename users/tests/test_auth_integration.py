@@ -1,6 +1,7 @@
 """
-Test Case #255 / Task #255 - Registration feature integration tests
-Azure DevOps Work Item: https://dev.azure.com/grup8devops/Online_Course/_workitems/edit/255
+User Story #255 / Task #257 - Registration feature integration tests
+Azure DevOps User Story: https://dev.azure.com/grup8devops/Online_Course/_workitems/edit/255
+Azure DevOps Work Item: https://dev.azure.com/grup8devops/Online_Course/_workitems/edit/257
 
 Goal:
 Verify the user registration endpoint with database connection and integration
@@ -15,7 +16,7 @@ Flow:
 6. Verify missing required fields return validation errors
 7. Verify password mismatch returns a validation error
 
-./venv/bin/python manage.py test users.tests -v 2
+./venv/bin/python manage.py test users.tests.test_auth_integration -v 2
 """
 
 import jwt
