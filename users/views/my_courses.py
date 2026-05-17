@@ -5,24 +5,22 @@ from rest_framework.permissions import IsAuthenticated
 from users.selectors.my_courses import get_my_courses, get_my_course_curriculum, get_lesson
 from users.serializers.my_courses import MyCourseSerializer, MyCourseSectionSerializer
 from users.services.my_courses import complete_lesson
-
+from utils.pagination import CustomPageNumberPagination
 
 class MyCourseListView(APIView):
-    # GET /api/v1/profile/my-courses/  satın aldığı kursları listeler
+    # GET /api/v1/profile/my-courses/ - satın aldığı kursları listeler
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         enrollments = get_my_courses(request.user)
-        serializer = MyCourseSerializer(enrollments, many=True)
-        return Response({
-            "status": 200,
-            "payload": serializer.data,
-            "errorMessage": None
-        })
+        paginator = CustomPageNumberPagination()
+        result = paginator.paginate_queryset(enrollments, request)
+        serializer = MyCourseSerializer(result, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class MyCourseDetailView(APIView):
-    # GET /api/v1/profile/my-courses/<slug>/curriculum/  kursa ait bölüm ve dersler
+    # GET /api/v1/profile/my-courses/<slug>/curriculum/ kursa ait bölüm ve dersler
     permission_classes = [IsAuthenticated]
 
     def get(self, request, slug):
