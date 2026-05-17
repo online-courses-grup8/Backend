@@ -14,6 +14,8 @@ Flow:
 5. Verify duplicate email registration returns a validation error
 6. Verify missing required fields return validation errors
 7. Verify password mismatch returns a validation error
+
+./venv/bin/python manage.py test users.tests -v 2
 """
 
 import jwt
